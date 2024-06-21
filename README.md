@@ -11,6 +11,9 @@ Decisões arquiteturais:
 -------------------------------------------------
 Endpoints:
 
+Banco de dados
+http://localhost:9000/h2
+
 POST
 http://localhost:9000/api/contas
 {
@@ -31,11 +34,11 @@ http://localhost:9000/api/clientes
 http://localhost:9000/api/transferencias/agendar
 {
   "contaOrigemId": 1,
-  "contaDestinoId": 2,
+  "contaDestinoId": 3,
   "valor": 500.00,
   "dataAgendada": "2024-07-01"
 }
-------------
+
 GET
 http://localhost:9000/api/contas
 http://localhost:9000/api/contas/{id}
@@ -48,20 +51,8 @@ http://localhost:9000/api/agendamentos/{id}
 
 DELET
 http://localhost:9000/api/contas/{id}
-{
-  "banco": "Banco A",
-  "agencia": "1234",
-  "numero": "56789",
-  "saldo": 1000.00
-}
-
 http://localhost:9000/api/clientes/{id}
-{
-  "nome": "Fulano de Tal-1",
-  "cpf": "123.456.789-00",
-  "endereco": "Rua dos Exemplos, 123",
-  "contaIds": [1, 2]
-}
+
 
 -------------------------------------------------
 versões:
