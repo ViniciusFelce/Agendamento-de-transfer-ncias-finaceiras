@@ -1,8 +1,8 @@
 package com.project.backend.controller;
 
 import com.project.backend.dto.ClienteDTO;
+import com.project.backend.dto.ContaBancariaDTO;
 import com.project.backend.model.Cliente;
-import com.project.backend.model.ContaBancaria;
 import com.project.backend.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,57 +15,63 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/clientes")
 public class ClienteController {
-
-    private final ClienteService clienteService;
-
     @Autowired
-    public ClienteController(ClienteService clienteService) {
-        this.clienteService = clienteService;
+    private ClienteService clienteService;
+    @PostMapping
+    public ResponseEntity<?> criarClienteComConta(@RequestBody ClienteDTO clienteDTO) {
+        try {
+            clienteService.criarClienteComConta(clienteDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar cliente com conta bancária: " + e.getMessage());
+        }
     }
-
     @GetMapping
     public ResponseEntity<List<ClienteDTO>> listarClientes() {
-        List<ClienteDTO> clientes = clienteService.listarClientes().stream()
-                .map(cliente -> new ClienteDTO(
-                        cliente.getId(),
-                        cliente.getNome(),
-                        cliente.getCpf(),
-                        cliente.getEndereco(),
-                        cliente.getContas().stream().map(ContaBancaria::getId).collect(Collectors.toList())
-                ))
+        List<Cliente> clientes = clienteService.listarClientes();
+        List<ClienteDTO> clienteDTOs = clientes.stream()
+                .map(cliente -> {
+                    ClienteDTO clienteDTO = new ClienteDTO();
+                    clienteDTO.setId(cliente.getId());
+                    clienteDTO.setNome(cliente.getNome());
+                    clienteDTO.setCpf(cliente.getCpf());
+                    clienteDTO.setEmail(cliente.getUsername());
+                    clienteDTO.setSenha(cliente.getPassword());
+                    clienteDTO.setEndereco(cliente.getEndereco());
+                    clienteDTO.setContas(cliente.getContas().stream()
+                            .map(conta -> new ContaBancariaDTO(
+                                    conta.getId(),
+                                    conta.getBanco(),
+                                    conta.getAgencia(),
+                                    conta.getNumero(),
+                                    conta.getSaldo()
+                            )).collect(Collectors.toList()));
+                    return clienteDTO;
+                })
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(clientes);
+        return ResponseEntity.ok(clienteDTOs);
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<ClienteDTO> buscarClientePorId(@PathVariable Long id) {
         Cliente cliente = clienteService.buscarClientePorId(id);
-        ClienteDTO clienteDTO = new ClienteDTO(
-                cliente.getId(),
-                cliente.getNome(),
-                cliente.getCpf(),
-                cliente.getEndereco(),
-                cliente.getContas().stream().map(ContaBancaria::getId).collect(Collectors.toList())
-        );
+        if (cliente == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        ClienteDTO clienteDTO = new ClienteDTO();
+        clienteDTO.setId(cliente.getId());
+        clienteDTO.setNome(cliente.getNome());
+        clienteDTO.setCpf(cliente.getCpf());
+        clienteDTO.setEmail(cliente.getUsername());
+        clienteDTO.setSenha(cliente.getPassword());
+        clienteDTO.setEndereco(cliente.getEndereco());
+        clienteDTO.setContas(cliente.getContas().stream()
+                .map(conta -> new ContaBancariaDTO(
+                        conta.getId(),
+                        conta.getBanco(),
+                        conta.getAgencia(),
+                        conta.getNumero(),
+                        conta.getSaldo()
+                )).collect(Collectors.toList()));
         return ResponseEntity.ok(clienteDTO);
-    }
-
-    @PostMapping
-    public ResponseEntity<ClienteDTO> criarCliente(@RequestBody ClienteDTO clienteDTO) {
-        Cliente novoCliente = clienteService.criarCliente(clienteDTO);
-        ClienteDTO novoClienteDTO = new ClienteDTO(
-                novoCliente.getId(),
-                novoCliente.getNome(),
-                novoCliente.getCpf(),
-                novoCliente.getEndereco(),
-                novoCliente.getContas().stream().map(ContaBancaria::getId).collect(Collectors.toList())
-        );
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoClienteDTO);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarCliente(@PathVariable Long id) {
-        clienteService.deletarCliente(id);
-        return ResponseEntity.noContent().build();
     }
 }

@@ -30,8 +30,9 @@ public class ContaBancaria {
     @OneToMany(mappedBy = "contaDestino", cascade = CascadeType.ALL)
     private List<TransferenciaFinanceira> transferenciasRecebidas;
 
-    @ManyToMany(mappedBy = "contas")
-    private List<Cliente> clientes;
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
 
     public ContaBancaria() {
     }
@@ -100,12 +101,12 @@ public class ContaBancaria {
         this.transferenciasRecebidas = transferenciasRecebidas;
     }
 
-    public List<Cliente> getClientes() {
-        return clientes;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setClientes(List<Cliente> clientes) {
-        this.clientes = clientes;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
 }
