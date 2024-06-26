@@ -1,7 +1,6 @@
 package com.project.backend.controller;
 
 import com.project.backend.dto.ContaBancariaDTO;
-import com.project.backend.model.ContaBancaria;
 import com.project.backend.service.ContaBancariaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

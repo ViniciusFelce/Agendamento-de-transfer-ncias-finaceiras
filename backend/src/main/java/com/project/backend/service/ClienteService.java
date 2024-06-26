@@ -6,9 +6,6 @@ import com.project.backend.model.Cliente;
 import com.project.backend.model.ContaBancaria;
 import com.project.backend.repository.ClienteRepository;
 import com.project.backend.repository.ContaBancariaRepository;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ClienteService implements UserDetailsService {
+public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
@@ -29,8 +26,6 @@ public class ClienteService implements UserDetailsService {
         Cliente cliente = new Cliente();
         cliente.setNome(clienteDTO.getNome());
         cliente.setCpf(clienteDTO.getCpf());
-        cliente.setUsername(clienteDTO.getEmail());
-        cliente.setPassword(clienteDTO.getSenha());
         cliente.setEndereco(clienteDTO.getEndereco());
 
         if (clienteDTO.getContas() != null) {
@@ -63,14 +58,4 @@ public class ClienteService implements UserDetailsService {
         }
         return cliente;
     }
-
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Cliente cliente = clienteRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Email Não encontrado: " + username));
-
-        return ServiceUsuariosDetailsImp.build(cliente);
-    }
-
 }

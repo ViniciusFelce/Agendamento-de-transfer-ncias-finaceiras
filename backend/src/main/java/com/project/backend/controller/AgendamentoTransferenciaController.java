@@ -1,13 +1,10 @@
 package com.project.backend.controller;
 
-import com.project.backend.dto.AgendamentoTransferenciaDTO;
+
 import com.project.backend.dto.TransferenciaFinanceiraDTO;
-import com.project.backend.model.AgendamentoTransferencia;
 import com.project.backend.model.TransferenciaFinanceira;
-import com.project.backend.service.AgendamentoTransferenciaService;
 import com.project.backend.service.TransferenciaFinanceiraService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

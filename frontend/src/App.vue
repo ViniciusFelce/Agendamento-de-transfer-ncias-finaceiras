@@ -27,6 +27,6 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-  padding-bottom: 60px; /* Espaço adicional para o rodapé */
+  padding-bottom: 60px;
 }
 </style>

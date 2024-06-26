@@ -28,6 +28,11 @@ public class TransferenciaFinanceiraService {
 
     @Transactional
     public TransferenciaFinanceira agendarTransferencia(Long contaOrigemId, Long contaDestinoId, BigDecimal valor, LocalDate dataAgendada) {
+        // Verificar se contaOrigemId é menor que contaDestinoId
+        if (contaOrigemId >= contaDestinoId) {
+            throw new IllegalArgumentException("O valor de contaOrigemId deve ser menor que contaDestinoId.");
+        }
+
         // Buscar contas bancárias
         Optional<ContaBancaria> contaOrigemOptional = contaBancariaRepository.findById(contaOrigemId);
         Optional<ContaBancaria> contaDestinoOptional = contaBancariaRepository.findById(contaDestinoId);

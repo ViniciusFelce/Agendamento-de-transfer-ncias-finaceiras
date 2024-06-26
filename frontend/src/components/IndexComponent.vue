@@ -18,10 +18,7 @@
       <b-form-group label="Senha" label-for="password">
         <b-form-input id="password" v-model="loginData.password" type="password" required class="custom-input"></b-form-input>
       </b-form-group>
-      <!-- Utilize router-link com slot scoped para redirecionar para ContaUser -->
-      <router-link to="/conta-user" v-slot="{ navigate }">
-        <b-button @click="navigate" type="submit" variant="success" class="mb-3">Entrar</b-button>
-      </router-link>
+      <b-button type="submit" variant="success" class="mb-3">Entrar</b-button>
       <p class="create-account-text">
         Não tem uma conta? <router-link to="/create-account">Criar Conta</router-link>
       </p>
@@ -30,6 +27,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'IndexComponent',
   data() {
@@ -42,8 +41,21 @@ export default {
   },
   methods: {
     onLogin() {
-      console.log('Login enviado:', this.loginData);
-      // Adicione aqui a lógica para processar o login
+      axios.post('http://localhost:9000/api/auth/signin', {
+        email: this.loginData.email,
+        password: this.loginData.password
+      })
+      .then(response => {
+        console.log('Resposta do login:', response.data);
+        if (response.status === 200) {
+          this.$router.push('/conta-user');
+        } else {
+          console.error('Erro ao fazer login:', response);
+        }
+      })
+      .catch(error => {
+        console.error('Erro ao fazer login:', error);
+      });
     }
   }
 }
@@ -77,7 +89,7 @@ export default {
 }
 
 .custom-input {
-  width: 15%;
+  width: 35%; /* Ajuste a largura conforme sua preferência */
   margin: 0 auto;
 }
 
@@ -88,7 +100,7 @@ export default {
 }
 
 .create-account-text {
-  font-size: 0.1rem;
+  font-size: 1rem; /* Tamanho da fonte ajustado */
   color: #989898;
 }
 
