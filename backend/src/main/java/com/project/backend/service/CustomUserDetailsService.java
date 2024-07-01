@@ -1,6 +1,5 @@
 package com.project.backend.service;
 
-
 import com.project.backend.payload.SignUpRequest;
 import com.project.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

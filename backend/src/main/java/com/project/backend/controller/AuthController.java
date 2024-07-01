@@ -5,7 +5,6 @@ import com.project.backend.dto.ContaBancariaDTO;
 import com.project.backend.dto.SignUpRequestDTO;
 import com.project.backend.model.Cliente;
 import com.project.backend.model.ContaBancaria;
-import com.project.backend.payload.JwtResponse;
 import com.project.backend.payload.LoginRequest;
 import com.project.backend.payload.SignUpRequest;
 import com.project.backend.payload.SignInResponse;

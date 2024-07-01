@@ -7,7 +7,7 @@ versões:
     Vue.Js          - 5.0.8
     Java/JDK        - 17.0
     springframework - 3.3.0
-    jjwt            - 0.9.1
+    jwt            - 0.9.1
     crypto
     Database: h2 e mysql
 ---BACKEND-------------------------------------------------------
@@ -69,5 +69,6 @@ versões:
         http://localhost:9000/api/agendamentos/{id}
 
 ---FRONTEND-------------------------------------------------------
-
+http://localhost:8080
+\Agendamento-de-transfer-ncias-finaceiras> npm run serve
 - 100% responsivo
