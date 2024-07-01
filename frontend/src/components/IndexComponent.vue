@@ -1,17 +1,15 @@
 <template>
   <div class="index-container">
-    <h1>Bem-vindo à Criação de Conta Bancária</h1>
+    <h1>Bem-vindo ao BlueStar Bank</h1>
     <p>
-      Aqui você pode criar sua conta bancária de forma fácil e rápida.
-      Preencha os dados necessários e comece a usar nossos serviços.
+      O BlueStar Bank oferece uma experiência bancária excepcional, projetada para facilitar sua vida financeira. Com serviços inovadores e uma plataforma fácil de usar, você pode criar sua conta bancária de forma rápida e segura.
     </p>
     <p>
-      Nossos serviços são projetados para oferecer a melhor experiência
-      para nossos clientes. Comece agora mesmo clicando no botão abaixo.
+      Junte-se aos milhares de clientes satisfeitos que já escolheram o BlueStar Bank. Clique no botão abaixo e comece a usar nossos serviços hoje mesmo!
     </p>
     <hr class="custom-hr">
     <h2>Login</h2>
-    <b-form @submit.prevent="onLogin">
+    <b-form @submit.prevent="onLogin" class="login-form">
       <b-form-group label="Email" label-for="email">
         <b-form-input id="email" v-model="loginData.email" type="email" required class="custom-input"></b-form-input>
       </b-form-group>
@@ -48,7 +46,11 @@ export default {
       .then(response => {
         console.log('Resposta do login:', response.data);
         if (response.status === 200) {
-          this.$router.push('/conta-user');
+          // Armazenar dados no localStorage
+          localStorage.setItem('sessionTokenJWT', response.data.token);
+          localStorage.setItem('userId', response.data.id);
+          localStorage.setItem('userEmail', response.data.email);
+          this.$router.push({ name: 'ContaUser' }); // Redirecionar para a página após o login
         } else {
           console.error('Erro ao fazer login:', response);
         }
@@ -67,55 +69,23 @@ export default {
   padding: 20px;
 }
 
-.index-container h1 {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
+.custom-hr {
+  margin: 20px auto;
+  width: 50%;
 }
 
-.index-container p {
-  font-size: 1.2rem;
-  margin-bottom: 15px;
-}
-
-.index-container b-button {
-  font-size: 1rem;
-  padding: 10px 20px;
-}
-
-.index-container h2 {
-  margin-top: 40px;
-  font-size: 2rem;
-  margin-bottom: 20px;
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .custom-input {
-  width: 35%; /* Ajuste a largura conforme sua preferência */
+  width: 100%;
   margin: 0 auto;
 }
 
-.custom-hr {
-  border: 0;
-  border-top: 1px solid #323232;
-  margin: 20px 0;
-}
-
 .create-account-text {
-  font-size: 1rem; /* Tamanho da fonte ajustado */
-  color: #989898;
-}
-
-.create-account-text a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-.create-account-text a:hover {
-  text-decoration: underline;
-}
-
-@media (max-width: 767px) {
-  .custom-input {
-    width: 95%;
-  }
+  margin-top: 15px;
 }
 </style>

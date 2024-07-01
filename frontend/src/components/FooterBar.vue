@@ -1,6 +1,6 @@
 <template>
     <footer class="footer">
-      <p>&copy; 2024 Seu Nome ou Empresa. Todos os direitos reservados.</p>
+      <p>&copy; 2024 BlueStar Bank. Todos os direitos reservados.</p>
     </footer>
   </template>
   

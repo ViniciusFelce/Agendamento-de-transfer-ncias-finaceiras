@@ -8,29 +8,33 @@ import com.project.backend.model.ContaBancaria;
 import com.project.backend.payload.JwtResponse;
 import com.project.backend.payload.LoginRequest;
 import com.project.backend.payload.SignUpRequest;
+import com.project.backend.payload.SignInResponse;
 import com.project.backend.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/auth")
 public class AuthController {
+
     @Autowired
     private AuthService authService;
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Validated @RequestBody LoginRequest loginRequest) {
         String jwt = authService.authenticateUserAndGenerateJwt(loginRequest);
-        return ResponseEntity.ok(new JwtResponse(jwt));
+        SignUpRequest userDetails = authService.getUserDetailsByEmail(loginRequest.getEmail());
+        SignInResponse response = new SignInResponse(userDetails.getId(), userDetails.getEmail(), jwt);
+        return ResponseEntity.ok(response);
     }
+
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignUpRequestDTO signUpRequestDTO) {
         SignUpRequest signUpRequest = convertToEntity(signUpRequestDTO);
@@ -39,9 +43,17 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
+    @GetMapping("/user-details/{id}")
+    public ResponseEntity<?> getUserDetails(@PathVariable Long id) {
+        Cliente cliente = authService.buscarClientePorId(id);
+        SignUpRequest signUpRequest = authService.buscarSignUpRequestPorClienteId(id);
+        SignUpRequestDTO signUpRequestDTO = convertClienteToSignUpRequestDTO(cliente, signUpRequest);
+        return ResponseEntity.ok(signUpRequestDTO);
+    }
+
     private SignUpRequest convertToEntity(SignUpRequestDTO signUpRequestDTO) {
         SignUpRequest signUpRequest = new SignUpRequest();
-        signUpRequest.setId(signUpRequestDTO.getCliente().getId());
+        signUpRequest.setId(signUpRequestDTO.getId());
         signUpRequest.setEmail(signUpRequestDTO.getEmail());
         signUpRequest.setPassword(signUpRequestDTO.getPassword());
         Cliente cliente = new Cliente();
@@ -67,6 +79,7 @@ public class AuthController {
 
     private SignUpRequestDTO convertToDTO(SignUpRequest signUpRequest) {
         SignUpRequestDTO signUpRequestDTO = new SignUpRequestDTO();
+        signUpRequestDTO.setId(signUpRequest.getId());
         signUpRequestDTO.setEmail(signUpRequest.getEmail());
         signUpRequestDTO.setPassword(signUpRequest.getPassword());
 
@@ -97,4 +110,12 @@ public class AuthController {
         return clienteDTO;
     }
 
+    private SignUpRequestDTO convertClienteToSignUpRequestDTO(Cliente cliente, SignUpRequest signUpRequest) {
+        SignUpRequestDTO signUpRequestDTO = new SignUpRequestDTO();
+        signUpRequestDTO.setId(signUpRequest.getId());
+        signUpRequestDTO.setEmail(signUpRequest.getEmail());
+        signUpRequestDTO.setPassword(signUpRequest.getPassword());
+
+        return signUpRequestDTO;
+    }
 }
