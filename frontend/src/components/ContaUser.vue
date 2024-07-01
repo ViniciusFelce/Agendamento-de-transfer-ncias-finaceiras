@@ -35,10 +35,8 @@
         <!-- Nova seção de botões -->
         <div class="button-section">
           <button @click="navigateToTransferencia(conta.id)">Transferir Dinheiro</button>
+          <button @click="navigateToHistorico(conta.id)">Histórico de Transações</button>
         </div>
-      </div>
-      <div class="button-section">
-        <button @click="navigateToHistorico">Histórico de Transações</button>
       </div>
     </div>
   </div>
@@ -86,8 +84,8 @@ export default {
     navigateToTransferencia(contaOrigemId) {
       this.$router.push({ name: 'Transferencia', params: { contaOrigemId } });
     },
-    navigateToHistorico() {
-      this.$router.push({ name: 'Historico' });
+    navigateToHistorico(contaOrigemId) {
+      this.$router.push({ name: 'Historico', params: { contaOrigemId } });
     }
   }
 }

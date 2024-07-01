@@ -96,21 +96,32 @@ export default {
             const diasParaExecucao = Math.ceil((dataHoraAgendadaObj.getTime() - hoje.getTime()) / (1000 * 3600 * 24));
 
             let mensagemTaxa = '';
+            let taxaAplicavel = false;
 
             // Aplicar taxas conforme as condições especificadas
             if (valorTransferencia === 3.0 && this.transferirAgoraVisivel) {
                 mensagemTaxa = 'Taxa de 2.5% aplicada.';
+                taxaAplicavel = true;
             } else if (diasParaExecucao >= 1 && diasParaExecucao <= 10 && this.transferirAgoraVisivel && valorTransferencia === 12.0) {
                 this.mensagem = 'Transferência não permitida por taxa de 0.0%.';
                 return;
             } else if (diasParaExecucao >= 11 && diasParaExecucao <= 20) {
                 mensagemTaxa = 'Taxa de 8.2% aplicada.';
+                taxaAplicavel = true;
             } else if (diasParaExecucao >= 21 && diasParaExecucao <= 30) {
                 mensagemTaxa = 'Taxa de 6.9% aplicada.';
+                taxaAplicavel = true;
             } else if (diasParaExecucao >= 31 && diasParaExecucao <= 40) {
                 mensagemTaxa = 'Taxa de 4.7% aplicada.';
+                taxaAplicavel = true;
             } else if (diasParaExecucao >= 41 && diasParaExecucao <= 50) {
                 mensagemTaxa = 'Taxa de 1.7% aplicada.';
+                taxaAplicavel = true;
+            }
+
+            if (!taxaAplicavel) {
+                this.mensagem = 'Nenhuma taxa aplicável. Transferência não permitida.';
+                return;
             }
 
             const tempoParaExecucao = dataHoraAgendadaObj.getTime() - hoje.getTime();

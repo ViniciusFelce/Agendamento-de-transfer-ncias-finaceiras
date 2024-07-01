@@ -23,15 +23,15 @@ const routes = [
     props: route => ({ id: route.params.id, email: route.params.email })
   },
   {
-    path: '/transferencia/:contaOrigemId', // Defina o parâmetro na rota
+    path: '/transferencia/:contaOrigemId',
     name: 'Transferencia',
     component: TransferenciaComponent,
     props: true // Permite passar props como parâmetros
   },
   {
-    path: '/historico',
+    path: '/historico/:contaOrigemId',
     name: 'Historico',
-    component: HistoricoComponent
+    component: HistoricoComponent,
   }
 ]
 
